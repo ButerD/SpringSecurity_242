@@ -49,13 +49,13 @@ public class UserController {
 
 	@GetMapping(value = "/{id}/edit")
 	public  String editUser(Model model, @PathVariable("id") int id) {
-		model.addAttribute("user", (User)userService.getUser(id) );
+		model.addAttribute("user", userService.getUser(id) );
 		return "edit";
 	}
 
 	@PostMapping("/{id}")
 	public String update(@ModelAttribute("user") User user, @PathVariable("id") int id) {
-		userService.updateUser(id, user);
+		userService.updateUser(user);
 		return "redirect:/";
 	}
 

@@ -11,6 +11,6 @@ public interface UserService {
     void addUser(User user);
     void removeUser(int id);
     public User getUser(int id);
-    public void updateUser(int id, User user);
+    public void updateUser(User user);
 
 }
