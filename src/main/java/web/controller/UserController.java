@@ -13,6 +13,7 @@ import web.service.UserService;
 
 import java.security.Principal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -65,10 +66,11 @@ public class UserController {
 
 	@PostMapping
 	public String addNewUser(@ModelAttribute("user") User user, @RequestParam(value = "myRoles") String[] myRole) {
-		Set<Role> roles = new HashSet<>();
-		for (String s : myRole) {
-			roles.add(roleService.getRoleByName(s));
-		}
+//		Set<Role> roles = new HashSet<>();
+//		for (String s : myRole) {
+//			roles.add(roleService.getRoleByName(s));
+//		}
+		Set<Role> roles = new HashSet<>(Arrays.stream(myRole).map(s -> roleService.getRoleByName(s)).collect(Collectors.toList())) ;
 		user.setRoles(roles);
 		userService.addUser(user);
 		return "redirect:/admin";
