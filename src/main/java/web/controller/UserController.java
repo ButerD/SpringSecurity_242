@@ -6,21 +6,24 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import web.dao.RoleDao;
+import web.model.Role;
 import web.model.User;
+import web.service.RoleService;
 import web.service.UserService;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 
 @Controller
 public class UserController {
 	private  UserService userService;
+	private RoleService roleService;
 
 	@Autowired
-	public UserController(UserService userService) {
+	public UserController(UserService userService, RoleService roleService) {
 		this.userService = userService;
+		this.roleService = roleService;
 	}
 
 	@GetMapping(value = "/")
@@ -56,11 +59,17 @@ public class UserController {
 	@GetMapping(value = "new")
 	public String newUser(Model model) {
 		model.addAttribute("user", new User());
+		model.addAttribute("roles",roleService.getAllRoles());
 		return "addUser";
 	}
 
 	@PostMapping
-	public String addNewUser(@ModelAttribute("user") User user) {
+	public String addNewUser(@ModelAttribute("user") User user, @RequestParam(value = "myRoles") String[] myRole) {
+		Set<Role> roles = new HashSet<>();
+		for (String s : myRole) {
+			roles.add(roleService.getRoleByName(s));
+		}
+		user.setRoles(roles);
 		userService.addUser(user);
 		return "redirect:/admin";
 	}
@@ -74,11 +83,17 @@ public class UserController {
 	@GetMapping(value = "/{id}/edit")
 	public  String editUser(Model model, @PathVariable("id") Long id) {
 		model.addAttribute("user", userService.getUser(id) );
+		model.addAttribute("roles",roleService.getAllRoles());
 		return "edit";
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
+	public String update(@ModelAttribute("user") User user,@RequestParam(value = "myRoles") String[] myRole, @PathVariable("id") Long id) {
+		Set<Role> roles = new HashSet<>();
+		for (String s : myRole) {
+			roles.add(roleService.getRoleByName(s));
+		}
+		user.setRoles(roles);
 		userService.updateUser(user);
 		return "redirect:/admin";
 	}

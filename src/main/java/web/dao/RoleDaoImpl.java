@@ -7,12 +7,19 @@ import web.model.Role;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public class RoleDaoImpl implements RoleDao {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    @Override
+    public List<Role> getAllRoles() {
+        return entityManager.createQuery("select r from Role r", Role.class).getResultList();
+    }
 
     @Transactional
     @Override
@@ -30,18 +37,13 @@ public class RoleDaoImpl implements RoleDao {
 
     @Override
     public Role getById(Long id) {
-        return entityManager.find(Role.class, id );
+        return entityManager.find(Role.class, id);
     }
 
     @Override
     public Role getRoleByName(String rolename) {
-        try{
-            Role role = entityManager.createQuery("SELECT r FROM Role r where r.name = :name", Role.class)
-                    .setParameter("name", rolename)
-                    .getSingleResult();
-            return role;
-        } catch (NoResultException ex){
-            return null;
-        }
+        return entityManager.createQuery("SELECT r FROM Role r where r.name = :name", Role.class)
+                .setParameter("name", rolename)
+                .getSingleResult();
     }
 }

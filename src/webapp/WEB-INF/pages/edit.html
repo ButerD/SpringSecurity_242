@@ -15,7 +15,21 @@
     <label for="age">Age:</label>
     <input type="number" th:field="*{age}" id="age" />
     <br/>
+    <label for="password">Password:</label>
+    <input type="text" th:field="*{password}" id="password" />
     <br/>
+    <br/>
+
+    <tr>
+    <td>Roles: </td>
+    <td>
+        <th:block th:each="role : ${roles}">
+            <input type="checkbox" name="myRoles" th:value="${role.getName()}"/>
+            <label th:text="${role.getName()}" ></label>
+        </th:block>
+    </td>
+    </tr>
+    </br>
     <input type="submit" value="Update"/>
 
 </form>
