@@ -65,7 +65,7 @@ public class UserController {
 	}
 
 	@PostMapping
-	public String addNewUser(@ModelAttribute("user") User user, @RequestParam(value = "myRoles") String[] myRole) {
+	public String addNewUser(@ModelAttribute("user") User user, @RequestParam(value = "myRoles", defaultValue = "ROLE_USER") String... myRole) {
 //		Set<Role> roles = new HashSet<>();
 //		for (String s : myRole) {
 //			roles.add(roleService.getRoleByName(s));
@@ -90,7 +90,7 @@ public class UserController {
 	}
 
 	@PostMapping("/{id}")
-	public String update(@ModelAttribute("user") User user,@RequestParam(value = "myRoles") String[] myRole, @PathVariable("id") Long id) {
+	public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id, @RequestParam(value = "myRoles", defaultValue = "ROLE_USER") String... myRole) {
 		Set<Role> roles = new HashSet<>();
 		for (String s : myRole) {
 			roles.add(roleService.getRoleByName(s));
